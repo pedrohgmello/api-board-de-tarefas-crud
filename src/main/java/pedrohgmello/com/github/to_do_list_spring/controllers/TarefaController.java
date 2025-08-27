@@ -15,6 +15,7 @@ import pedrohgmello.com.github.to_do_list_spring.services.TarefaService;
 
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @RestController
@@ -35,9 +36,13 @@ public class TarefaController {
     }
 
     @GetMapping
-    public ResponseEntity<Set<Tarefa>> read(@AuthenticationPrincipal Usuario usuarioLogado) {
+    public ResponseEntity<Set<TarefaResponseDTO>> read(@AuthenticationPrincipal Usuario usuarioLogado) {
         Set<Tarefa> tarefasPorUsuario = tarefaService.filtrarTarefasPorUsuario(usuarioLogado);
-        return ResponseEntity.ok(tarefasPorUsuario);
+        Set<TarefaResponseDTO> tarefasPorUsuarioResponse = new HashSet<>();
+        for(Tarefa tarefa : tarefasPorUsuario){
+            tarefasPorUsuarioResponse.add(new  TarefaResponseDTO(tarefa.getId(), tarefa.getTitulo(), tarefa.getDescricao(), tarefa.isConcluida(), tarefa.getDataCriacao(), usuarioLogado.getId()));
+        }
+        return ResponseEntity.ok(tarefasPorUsuarioResponse);
     }
 
     @PutMapping("/{id}")
