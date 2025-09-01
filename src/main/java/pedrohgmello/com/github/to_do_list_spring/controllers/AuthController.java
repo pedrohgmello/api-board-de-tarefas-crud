@@ -1,5 +1,7 @@
 package pedrohgmello.com.github.to_do_list_spring.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -35,6 +37,8 @@ public class AuthController {
 
 
     @PostMapping("/login")
+    @Operation(summary = "Autentica um usuário e retorna um token JWT", security = {})
+    @SecurityRequirements
     public ResponseEntity<TokenResponseDTO> login(@RequestBody LoginRequestDTO loginRequest){
         UsernamePasswordAuthenticationToken usernamePassword = new UsernamePasswordAuthenticationToken(
                 loginRequest.login(),
@@ -47,6 +51,8 @@ public class AuthController {
     }
 
     @PostMapping("/register")
+    @Operation(summary = "Registra um novo usuário no sistema", security = {})
+    @SecurityRequirements
     public ResponseEntity<UsuarioResponseDTO> register(@RequestBody RegistroRequestDTO registerRequest){
         Usuario usuario = usuarioService.criarUsuario(registerRequest.login(), registerRequest.password());
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest() // Pega a URL base da requisição atual (ex: /register)

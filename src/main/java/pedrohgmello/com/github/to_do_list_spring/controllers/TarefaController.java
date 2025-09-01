@@ -25,14 +25,14 @@ public class TarefaController {
     private TarefaService tarefaService;
 
     @PostMapping
-    public ResponseEntity<Tarefa> create(@RequestBody TarefaRequestDTO tarefa, @AuthenticationPrincipal Usuario usuarioLogado) {
+    public ResponseEntity<TarefaResponseDTO> create(@RequestBody TarefaRequestDTO tarefa, @AuthenticationPrincipal Usuario usuarioLogado) {
         Tarefa novaTarefa = tarefaService.criarTarefa(tarefa.titulo(), tarefa.descricao(), LocalDateTime.now(), usuarioLogado);
         TarefaResponseDTO tarefaResponseDTO = new TarefaResponseDTO(novaTarefa.getId(), novaTarefa.getTitulo(), novaTarefa.getDescricao(), novaTarefa.isConcluida(), novaTarefa.getDataCriacao(), usuarioLogado.getId());
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(novaTarefa.getId())
                 .toUri();
-        return ResponseEntity.created(uri).body(novaTarefa);
+        return ResponseEntity.created(uri).body(tarefaResponseDTO);
     }
 
     @GetMapping
